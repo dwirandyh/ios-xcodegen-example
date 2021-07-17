@@ -1,0 +1,14 @@
+//
+//  release.xcconfig
+//  xcodegen-example-app
+//
+//  Created by Dwi Randy Herdinanto on 17/07/21.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+BASE_URL = https:/$()/dwirandyh.com
+
+APP_NAME = MyApp
+PRODUCT_BUNDLE_IDENTIFIER = com.dwirandyh.myapp

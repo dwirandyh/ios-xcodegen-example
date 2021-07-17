@@ -1,0 +1,112 @@
+name: XcodegenExampleApp
+configs: # Tab Info -> Configurations
+  DevConfig: debug
+  StagingConfig: debug
+  ReleaseConfig: release
+# Schemes
+schemes:
+  # Development Scheme
+  DevelopmentScheme:
+    build:
+      targets:
+        XCodeGenExampleApp: All
+    run:
+      config: DevConfig
+    test:
+      config: DevConfig
+      targets:
+        - XCodeGenExampleAppTests
+      gatherCoverageData: true
+    profile:
+      config: DevConfig
+    analyze:
+      config: DevConfig
+    archive:
+      config: DevConfig
+  # Staging Scheme
+  StagingScheme:
+    build:
+      targets:
+        XCodeGenExampleApp: All # [run, archive, profile, test, analyze]
+    run:
+      config: StagingConfig
+    test:
+      config: StagingConfig
+      gatherCoverageData: true
+    profile:
+      config: StagingConfig
+    analyze:
+      config: StagingConfig
+    archive:
+      config: StagingConfig
+  # Release Scheme
+  ReleaseScheme:
+    build:
+      targets:
+        XCodeGenExampleApp: All
+    run:
+      config: ReleaseConfig
+    test:
+      config: ReleaseConfig
+      gatherCoverageData: true
+    profile:
+      config: ReleaseConfig
+    analyze:
+      config: ReleaseConfig
+    archive:
+      config: ReleaseConfig
+# Target App
+targets:
+  # App Target
+  XCodeGenExampleApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "14.5"
+    sources: 
+      - XcodegenExampleApp
+    configFiles:
+      DevConfig: XcodegenExampleApp/Configuration/Development.xcconfig
+      StagingConfig: XcodegenExampleApp/Configuration/Staging.xcconfig
+      ReleaseConfig: XcodegenExampleApp/Configuration/Release.xcconfig
+    settings:
+      base: # Default Settings
+        # App Version
+        MARKETING_VERSION: v1.2.0
+        CURRENT_PROJECT_VERSION: 1
+        DEVELOPMENT_TEAM: 53SF4C6222
+        CODE_SIGN_IDENTITY: "iPhone Distribution"
+        CODE_SIGN_STYLE: "Manual"
+      configs: # Settings Based On Xcodeproj configuration
+        DevConfig:
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.xcodegen.ios.dev"
+        StagingConfig:
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.xcodegen.ios.staging"
+        ReleaseConfig:
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.xcodegen.ios"
+    dependencies:
+      - sdk: Contacts.framework # do not embed
+      - sdk: AVFoundation.framework
+        #embed: true # embed and sign
+    postCompileScripts: # Target -> Build Phases -> New Run Script Phase
+      - script: |
+                if which swiftlint >/dev/null; then
+                  swiftlint
+                else
+                  echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+                fi
+        name: Run SwiftLint
+  
+  # Test Target
+  XCodeGenExampleAppTests:
+    platform: iOS
+    type: bundle.unit-test
+    sources:
+      - XcodegenExampleAppTests/
+
+    
+
+
+
+    
+# NOTE:
+# it can be readable with Target Template & Scheme Template
